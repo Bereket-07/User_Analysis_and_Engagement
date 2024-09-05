@@ -1,5 +1,4 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
@@ -26,7 +25,9 @@ DATABASE_URL= f"postgresql+psycopg2://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_
 engine = create_engine(DATABASE_URL)
 
 # create a session
-SessionalLocal = sessionmaker(autocommit=False,autoflush=False,bind=engine)
+SessionLocal  = sessionmaker(autocommit=False,autoflush=False,bind=engine)
 
-# create a base class for our models
-Base = declarative_base()
+def get_session():
+    engine = create_engine(DATABASE_URL)
+    Session = sessionmaker(bind=engine)
+    return Session()
