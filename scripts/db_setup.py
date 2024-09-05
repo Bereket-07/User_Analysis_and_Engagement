@@ -1,5 +1,5 @@
+import pandas as pd
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
 
@@ -21,13 +21,25 @@ DB_NAME=os.getenv('DB_NAME')
 DATABASE_URL= f"postgresql+psycopg2://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 
-# create a SQLAlchemy engine
-engine = create_engine(DATABASE_URL)
+class DataLoading:
+    def __init__(self):
+        self.data = self.load_data()
 
-# create a session
-SessionLocal  = sessionmaker(autocommit=False,autoflush=False,bind=engine)
+    def load_data(self):
+        # Create an SQLAlchemy engine
+        engine = create_engine('postgresql+psycopg2://postgres:1234@localhost:5432/telecom_db')
+        
+        # Define the SQL query
+        query = 'SELECT * FROM xdr_data;'
+        
+        # Execute the query and load data into a DataFrame
+        try:
+            with engine.connect() as connection:
+                result = connection.execute(query)
+                df = pd.DataFrame(result.fetchall())
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
+        
+        return df
 
-def get_session():
-    engine = create_engine(DATABASE_URL)
-    Session = sessionmaker(bind=engine)
-    return Session()

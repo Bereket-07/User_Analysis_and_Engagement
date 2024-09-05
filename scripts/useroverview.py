@@ -1,20 +1,20 @@
-from sqlalchemy.orm import Session
-from db_setup import get_session
-from models import XdrData
+from scripts.db_setup import DataLoading
 
-def get_all_records(db: Session):
-    "Retrieve all records from the xdr_data table"
-    return db.query(XdrData).all()
+class UserOverview:
+    def __init__(self):
+        self.main = DataLoading()
+    def load_data(self):
+        self.data = self.main.data
+        return self.data 
+    def basic_data(self):
+        rows , column = self.data.shape
+        columns = self.data.columns
+        head = self.data.head()
+        print(f"the data have {rows} rows  and {column} columns")
+        print(f" the data have this list of columns {columns}")
+        print(f"the data looks like this {head}")
 
-def main():
-    "Main function to demonstrate querying the database"
-    session = get_session()
-    try:
-        records = get_all_records(session)
-        for record in records:
-            print(record)
-    finally:
-        session.close()
 
-if __name__ == "__main__":
-    main()
+
+
+
