@@ -1,4 +1,4 @@
-# 💹 Financial Data Analysis and Predictive Modeling
+# 📡 TelecomInvestmentAnalysis
 
 ## Table of Contents
 
