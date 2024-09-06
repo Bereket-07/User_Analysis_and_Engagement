@@ -22,7 +22,7 @@ class UserOverviewovercleaneddata:
         print(f"the telecom company have {number_of_unoque_handset_type} types of unique handset mobile phones")
         print(f"and the top ten handsets are  \n {self.top_ten_handset_type}")
         print(f"And here is the visualization represenation {self.plot_top_ten_handsets()}")
-    def plot_top_ten_handsets(self):
+    def plot_top_ten_handsets(self): 
         print ("and here is the visual representaion")
         self.top_ten_handset_type.plot(kind='bar',color='skyblue')
         plt.title("Top ten handset chose by the user")
