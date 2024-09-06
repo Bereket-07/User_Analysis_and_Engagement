@@ -1,4 +1,4 @@
-# 📡 TelecomInvestmentAnalysis
+# 📡 Telecom Investment Analysis
 
 ## Table of Contents
 
