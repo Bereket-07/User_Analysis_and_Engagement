@@ -15,10 +15,12 @@ class data_cleaning_and_preprocessing:
         missing_values = self.data.isnull().sum()
         missing_values_percentage = (missing_values / len(self.data)) * 100
 
-        print(" Missing values count:\n",missing_values)
-        print("missing values Percentage:\n",missing_values_percentage)
-        print("And here is the visual representation")
-        self.visualize_the_missing_data()
+        missing_data_info = {
+            "missing_values": missing_values,
+            "missing_values_percentage": missing_values_percentage
+        }
+
+        return "missing_data_info"
     def visualize_the_missing_data(self):
         msno.matrix(self.data)
         msno.bar(self.data)

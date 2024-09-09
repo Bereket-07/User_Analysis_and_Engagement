@@ -5,7 +5,8 @@ import missingno as msno
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
 
 class userExperiance:
     def __init__(self) -> None:
@@ -178,5 +179,27 @@ class userExperiance:
         plt.xlabel('Average TCP Retransmission')
         plt.ylabel('Frequency')
         plt.show()
+    def compute_report(self):
+        experience_metrics = self.user_experiance[['Average TCP Retransmission', 'Average RTT', 'Average Throughput']]
+
+        # Standardize the data
+        scaler = StandardScaler()
+        scaled_metrics = scaler.fit_transform(experience_metrics)
+
+        # Perform k-means clustering
+        kmeans = KMeans(n_clusters=3, random_state=42)
+        self.user_experiance['Cluster'] = kmeans.fit_predict(scaled_metrics)
+
+        # Analyze and describe clusters
+        centroids = kmeans.cluster_centers_
+        print("Cluster centroids:\n", centroids)
+
+        # Visualize the clusters
+        sns.pairplot(self.user_experiance, hue='Cluster', vars=['Average TCP Retransmission', 'Average RTT', 'Average Throughput'])
+        plt.show()
+        return self.user_experiance
+
+
+
 
 

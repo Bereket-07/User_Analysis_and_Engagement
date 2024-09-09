@@ -42,7 +42,7 @@ class UserOverviewovercleaneddata:
         plt.ylabel('number of handset manufactured by the company')
         plt.title("Top three manufacrurers")
         plt.show()
-    def  top_5_handsets_per_top_3_handset_manufacturer(self):
+    def top_5_handsets_per_top_3_handset_manufacturer(self):
         top3_manufacturers_index = self.data['Handset Manufacturer'].value_counts().sort_values(ascending=False).head(3).index
         top_3_data = self.data[self.data['Handset Manufacturer'].isin(top3_manufacturers_index)]
         handset_type_counts = top_3_data.groupby('Handset Manufacturer')['Handset Type'].value_counts()
