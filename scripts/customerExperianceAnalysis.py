@@ -7,6 +7,19 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
+from sqlalchemy import create_engine
+from dotenv import load_dotenv
+import os
+
+
+DB_USERNAME = os.getenv('DB_USERNAME')
+DB_PASSWORD=os.getenv('DB_PASSWORD')
+DB_HOST=os.getenv('DB_HOST')
+DB_PORT=os.getenv('DB_PORT')
+DB_NAME=os.getenv('DB_NAME')
+
+DATABASE_URL= f"postgresql+psycopg2://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
 
 class userExperiance:
     def __init__(self) -> None:
@@ -198,6 +211,15 @@ class userExperiance:
         sns.pairplot(self.user_experiance, hue='Cluster', vars=['Average TCP Retransmission', 'Average RTT', 'Average Throughput'])
         plt.show()
         return self.user_experiance
+    def save_to_database(self, table_name='self.user_experiance_clusters'):
+        engine = create_engine(DATABASE_URL)
+        try:
+            with engine.connect() as connection:
+                self.user_experiance.to_sql(table_name, connection, if_exists='replace', index=False)
+                print(f"Data saved successfully to table '{table_name}'.")
+        except Exception as e:
+            print(f"An error occurred while saving to database: {e}")
+
 
 
 

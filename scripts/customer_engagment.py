@@ -3,6 +3,19 @@ import pandas as pd
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from scripts import DataLoading
+from sqlalchemy import create_engine
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+DB_USERNAME = os.getenv('DB_USERNAME')
+DB_PASSWORD=os.getenv('DB_PASSWORD')
+DB_HOST=os.getenv('DB_HOST')
+DB_PORT=os.getenv('DB_PORT')
+DB_NAME=os.getenv('DB_NAME')
+
+DATABASE_URL= f"postgresql+psycopg2://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 class CustomerEngagement:
     def __init__(self):
@@ -86,6 +99,17 @@ class CustomerEngagement:
         self.customer_engagement['cluster'] = self.normalized_df['cluster']
 
         return self.customer_engagement
+    def save_to_database(self, table_name='customer_engagement_clusters'):
+        try:
+            # Create the engine using SQLAlchemy
+            engine = create_engine('postgresql+psycopg2://postgres:1234@localhost:5432/telecom_db')
+            
+            # Save the DataFrame to a SQL table using the engine
+            self.customer_engagement.to_sql(table_name, con=engine, if_exists='replace', index=False)
+            
+            print(f"Data saved successfully to table '{table_name}'.")
+        except Exception as e:
+            print(f"An error occurred while saving to database: {e}")
 
     def analyze_clusters(self):
         cluster_analysis = self.customer_engagement.groupby('cluster').agg({
