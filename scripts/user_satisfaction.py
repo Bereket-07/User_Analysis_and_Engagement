@@ -4,11 +4,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression
 from sklearn.cluster import KMeans
+from scripts import DataLoading
+from sqlalchemy import create_engine
 
 class UserSatisfaction:
-    def __init__(self,customer_engagement,customer_experience):
-        self.customer_engagement = customer_engagement
-        self.customer_experience = customer_experience
+    def __init__(self): 
+        main = DataLoading()
+        self.customer_engagement = main.get_customer_engagement_clusters()
+        self.customer_experience = main.get_user_experiance_clusters()
     def calculate_engagemnt_score(self):
         #  identify the least engaged cluster  cluster 0
         least_engaged_cluster = self.customer_engagement[self.customer_engagement['cluster'] == 0]
@@ -78,4 +81,15 @@ class UserSatisfaction:
             'satisfaction_score': ['mean']
         }).reset_index()
         return cluster_aggergation
+    def save_to_database(self, table_name='combined_scores'):
+        try:
+            # Create the engine using SQLAlchemy
+            engine = create_engine('postgresql+psycopg2://postgres:1234@localhost:5432/telecom_db')
+            
+            # Save the DataFrame to a SQL table using the engine
+            self.combined_scores.to_sql(table_name, con=engine, if_exists='replace', index=False)
+            
+            print(f"Data saved successfully to table '{table_name}'.")
+        except Exception as e:
+            print(f"An error occurred while saving to database: {e}")
     

@@ -2,6 +2,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import os
+from sqlalchemy import text
 
 #  load environment variable from env file
 
@@ -30,7 +31,41 @@ class DataLoading:
         engine = create_engine('postgresql+psycopg2://postgres:1234@localhost:5432/telecom_db')
         
         # Define the SQL query
-        query = 'SELECT * FROM xdr_data;'
+        query = text('SELECT * FROM xdr_data;')
+        
+        # Execute the query and load data into a DataFrame
+        try:
+            with engine.connect() as connection:
+                result = connection.execute(query)
+                df = pd.DataFrame(result.fetchall())
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
+        
+        return df
+    def get_customer_engagement_clusters(self):
+        # Create an SQLAlchemy engine
+        engine = create_engine(DATABASE_URL)
+        
+        # Define the SQL query
+        query = text('SELECT * FROM customer_engagement_clusters;')
+        
+        # Execute the query and load data into a DataFrame
+        try:
+            with engine.connect() as connection:
+                result = connection.execute(query)
+                df = pd.DataFrame(result.fetchall())
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
+        
+        return df
+    def get_user_experiance_clusters(self):
+        # Create an SQLAlchemy engine
+        engine = create_engine(DATABASE_URL)
+        
+        # Define the SQL query
+        query = text('SELECT * FROM "self.user_experiance_clusters";')
         
         # Execute the query and load data into a DataFrame
         try:
